@@ -55,10 +55,10 @@ class Entry:
         """
         self.time = self.unpack(data, 'd', 12, 20)
         self.resp = self.unpack(data, 'd', 26, 34)
-        self.q1 = self.unpack(data, 'd', 80, 88)
+        self.q1 = self.unpack(data, 'd', 68, 76)
         self.q3 = self.unpack(data, 'd', 34, 42)
-        self.frag = self.unpack(data, 'f', 72, 76)
-        self.ce = self.unpack(data, 'f', 76, 80)
+        self.frag = self.unpack(data, 'f', 60, 64)
+        self.ce = self.unpack(data, 'f', 64, 68)
 
     @staticmethod
     def unpack(data: bytes, btype: str, beg: int, end: int) -> float:
@@ -83,7 +83,8 @@ class Entry:
 
 
 def _decode(buff: bytes):
-    magic_number = 186
+    # magic_number = 186
+    magic_number = 158
     offset = unpack('I', buff[88:92])[0]
     n = len(buff)
 
