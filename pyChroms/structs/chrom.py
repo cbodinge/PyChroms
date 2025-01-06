@@ -3,8 +3,10 @@ from numpy import ndarray, array
 
 
 class Chrom:
-    def __init__(self, chrom=None):
+    def __init__(self, chrom=None, label=''):
         self._chromatogram = array([[], []])
+
+        self.label = label
 
         if chrom is not None:
             if isinstance(chrom, list):
