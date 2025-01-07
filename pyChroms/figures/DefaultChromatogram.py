@@ -52,7 +52,7 @@ class Chromatogram(Graph):
         x_max = self.plot.xmax
 
         rng = abs(x_max - x_min)
-        factor = significance(rng)
+        factor = significance(rng*.5)
         dx = select_dx(ceil(rng*factor)/n)/factor
 
         _x = ceil(factor*x_min)/factor
@@ -70,7 +70,7 @@ class Chromatogram(Graph):
         y_max = self.plot.ymax
 
         rng = abs(y_max - y_min)
-        factor = significance(rng)
+        factor = significance(rng*.5)
         dy = select_dx(ceil(rng*factor)/n)/factor
 
         _y = ceil(factor*y_min)/factor
