@@ -1,5 +1,6 @@
 from PyGraphing import Graph, Icon
 from PyGraphing.series.scatter.curve import Curve
+from .CustomSeries import FilledCurve
 from PSVG import Path
 from .__fonts__ import font500
 from ..structs.chrom import Chrom
@@ -12,12 +13,12 @@ class Chromatogram(Graph):
         self._chroms = []
 
     def add_curve(self, chrom: Chrom, color: tuple[int, int, int],
-                  fill_opacity: float=.6, stroke_opacity: float=1, stroke_width: float=1):
+                  fill_opacity: float=.6, stroke_opacity: float=1, stroke_width: float=1, dasharray=None):
 
         path = Path(fill=color, fill_opacity=fill_opacity,
-                    stroke=color, stroke_opacity=stroke_opacity, stroke_width=stroke_width)
+                    stroke=color, stroke_opacity=stroke_opacity, stroke_width=stroke_width, stroke_dasharray=dasharray)
 
-        curve = Curve(icon=None, plot=self.plot, X=chrom.x, Y=chrom.y, path=path)
+        curve = FilledCurve(plot=self.plot, X=chrom.x, Y=chrom.y, path=path)
         curve.label = chrom.label
         self.plot.addChild(curve)
         self._chroms.append(curve)
@@ -76,20 +77,18 @@ class Chromatogram(Graph):
         _y = ceil(factor*y_min)/factor
 
         while _y<y_max:
-            y.addTick(_y, f'{_y:.0f}')
+            y.addTick(_y, f'{_y:.2f}')
             _y += dy
 
     def _x_label(self):
         x = self.xlabel
         x.root.active = True
         x.text = 'Retention Time (min)'
-        # x.textColor = (55, 75, 201)
         x.alignment = (1, 2)
 
     def _y_label(self):
         y = self.ylabel
-        y.text = 'Response'
-        # y.textColor = (55, 75, 201)
+        y.text = 'Normalized Response'
         y.textOpacity = 1
         y.alignment = (1, 0)
 
@@ -97,14 +96,12 @@ class Chromatogram(Graph):
         w = 10
         h = 5
 
+        line = curve.path.copy()
 
-        line = Path([('M', -2, h*2),
+        line.points = [('M', -2, h*2),
                      ('L', -2, .2*h),
                      ('L', w*2, .2*h),
-                     ('L', w*2, h*2)],
-                    stroke=curve.path.stroke,
-                    fill=curve.path.fill,
-                    fill_opacity=curve.path.fill_opacity)
+                     ('L', w*2, h*2)]
 
         return Icon(line, w, h)
 
