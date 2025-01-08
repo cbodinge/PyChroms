@@ -1,5 +1,7 @@
 # noinspection PyPackageRequirements
 from numpy import ndarray, array
+from scipy.signal import savgol_filter
+from scipy.ndimage.filters import gaussian_filter1d
 
 
 class Chrom:
@@ -82,6 +84,20 @@ class Chrom:
         ind = (x_min <= self._chromatogram[:, 0]) * (self._chromatogram[:, 0] <= x_max)
 
         self._chromatogram = self._chromatogram[ind, :]
+
+    def smooth(self, window=5, poly: int = 3):
+        self._chromatogram[:, 1] = savgol_filter(self._chromatogram[:, 1], window_length=window, polyorder=poly)
+
+    def gauss(self, sigma=3):
+        self._chromatogram[:, 1] = gaussian_filter1d(self._chromatogram[:, 1], sigma=sigma)
+
+    def rt_window(self, dt: float):
+        i = self._chromatogram[:, 1].argmax(0)
+
+        x_min = self._chromatogram[i, 0] - dt
+        x_max = self._chromatogram[i, 0] + dt
+
+        self.trim(x_min, x_max)
 
 
 null_chrom = Chrom([[0, 0]])
