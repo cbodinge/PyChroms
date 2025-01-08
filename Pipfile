@@ -9,6 +9,7 @@ fonttools = "*"
 pygraphing = "*"
 psvg = "*"
 numpytransforms = "*"
+scipy = "*"
 
 [dev-packages]
 
